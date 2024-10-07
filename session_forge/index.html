@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Forge</title>
+    <style>
+       body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .container { 
+            margin-bottom: 20px; 
+            padding: 20px; 
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2d2d2d;
+        }
+        
+        .response { 
+            margin-top: 10px; 
+            padding: 10px; 
+            background-color: #383838;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        button { 
+            margin-top: 10px;
+            background-color: #4a4a4a;
+            color: #e0e0e0;
+            border: 1px solid #666;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #5a5a5a;
+        }
+        
+        input {
+            background-color: #383838;
+            border: 1px solid #666;
+            color: #e0e0e0;
+            padding: 6px;
+            margin: 4px 0;
+            border-radius: 4px;
+            display: block;
+            width: 200px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #888;
+        }
+        
+        h1, h2 {
+            color: #8ab4f8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Session Forge</h1>
+
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            Username: <input type="text" id="username"><br>
+            Password: <input type="password" id="password"><br>
+            <button type="submit">Login</button>
+        </form>
+        <div id="loginResponse" class="response"></div>
+    </div>
+
+    <div class="container">
+        <h2>Check Profile</h2>
+        <button onclick="checkProfile()">Get Profile Data</button>
+        <div id="profileResponse" class="response"></div>
+    </div>
+
+    <div class="container">
+        <h2>Current Session Cookie</h2>
+        <div id="cookieInfo" class="response"></div>
+    </div>
+
+    <script>
+        function updateCookieInfo() {
+            const sessionCookie = document.cookie.split('; ').find(row => row.startsWith('session='));
+            document.getElementById('cookieInfo').textContent = sessionCookie || 'No session cookie found';
+        }
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                document.getElementById('loginResponse').textContent = JSON.stringify(data, null, 2);
+                updateCookieInfo();
+
+                await checkProfile();
+            } catch (error) {
+                document.getElementById('loginResponse').textContent = 'Error: ' + error.message;
+            }
+        });
+
+        // Check profile
+        async function checkProfile() {
+            try {
+                const response = await fetch('/profile');
+                const data = await response.json();
+                document.getElementById('profileResponse').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('profileResponse').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // Initial cookie info
+        updateCookieInfo();
+    </script>
+</body>
+</html>

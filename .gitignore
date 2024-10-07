@@ -1,0 +1,6 @@
+venv
+node_modules
+solutions
+__pycache__
+.env
+*.pem
