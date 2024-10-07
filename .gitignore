@@ -4,3 +4,4 @@ solutions
 __pycache__
 .env
 *.pem
+*.pyc
