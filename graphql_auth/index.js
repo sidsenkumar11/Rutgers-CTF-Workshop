@@ -1,5 +1,6 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
+const { ApolloServerPluginLandingPageLocalDefault } = require("apollo-server-core");
 const { GraphQLError } = require("graphql");
 const { TOTP } = require("totp-generator");
 const { users } = require("./db");
@@ -80,6 +81,13 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: true,
+    plugins: [
+      ApolloServerPluginLandingPageLocalDefault({
+        embed: true,
+        includeCookies: true
+      })
+    ],
     context: ({ req }) => {
       // allow introspection query
       const reqBody = JSON.stringify(req.body).trim();

@@ -1,12 +1,11 @@
 from flask import Flask, request, redirect, render_template, session, jsonify, url_for
 import requests
-import os
 
 from db import get_profile, upsert_profile
 from const import *
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = SECRET_KEY
 
 
 @app.route("/")

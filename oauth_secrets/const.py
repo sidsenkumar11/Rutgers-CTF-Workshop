@@ -11,3 +11,5 @@ FLAG = os.environ.get("FLAG")
 
 HOST_URI = os.environ["HOST_URI"]
 REDIRECT_URI = f"{HOST_URI}/callback"
+
+SECRET_KEY=os.environ["SECRET_KEY"]
