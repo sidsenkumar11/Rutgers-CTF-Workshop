@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv('.env')
 
 USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
 OAUTH_PROVIDER_URL = "https://accounts.google.com/o/oauth2"
